@@ -18,6 +18,8 @@ dependencies:
   mysql1: ^0.20.0
   #缓存
   redis: ^3.1.0
+  #身份验证和授权
+  crypto: ^3.0.3
 
 dev_dependencies:
   lints: ^2.0.0
