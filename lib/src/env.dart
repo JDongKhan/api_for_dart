@@ -11,7 +11,7 @@ class Env {
   Env._();
 
   late bool isDebug;
-  late String port;
+  late int port;
   late String ip;
   //静态资源目录
   late String root;
@@ -44,7 +44,7 @@ class Env {
 
   Env init({
     bool isDebug = false,
-    String port = '8080',
+    int port = 8080,
     String ip = 'localhost',
     String root = '',
     bool isSSL = false,
@@ -64,7 +64,7 @@ class Env {
           config?.get('default', 'DEBUG'),
           Platform.executable.contains('dart.exe') || Platform.executable.contains('bin/dart'),
         ),
-        port: config?.get('default', 'PORT') ?? '8080',
+        port: int.parse(config?.get('default', 'PORT') ?? '8080'),
         ip: config?.get('default', 'IP') ?? 'localhost',
         root: config?.get('default', 'ROOT') ?? '',
         isSSL: config?.get('default', 'IS_SSL') == '1',

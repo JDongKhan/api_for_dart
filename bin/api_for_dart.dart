@@ -38,13 +38,8 @@ void main(List<String> args) async {
     env.root,
     defaultDocument: 'index.html',
   );
-  // Configure a pipeline that logs requests.
   final handler = Cascade().add(webSocketHandler).add(staticFileHandler).add(application).handler;
-
-  // For running in containers, we respect the PORT environment variable.
-  final port = int.parse(env.port);
-  final server = await serve(handler, ip, port);
-
+  final server = await serve(handler, ip, env.port);
   server.autoCompress = true;
 
   print('Serving at http://${server.address.host}:${server.port}  with document root:${env.root}');
