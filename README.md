@@ -1,5 +1,9 @@
 ### 后端框架
 
+```shell
+flutter pub run build_runner build
+```
+
 使用dart语言和shelf框架开发后端接口，开发简单易用
 
 在项目下直接使用

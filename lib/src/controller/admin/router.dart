@@ -1,7 +1,6 @@
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
-import '../../core/group.dart';
 import 'auth.dart';
 import 'post.dart';
 import 'user.dart';
@@ -9,7 +8,7 @@ import 'admin.dart';
 
 part 'router.g.dart';
 
-class AdminRouter extends Group {
+class AdminRouter {
   @Route.mount('/auth/')
   Router get _auth => AuthController().router;
 

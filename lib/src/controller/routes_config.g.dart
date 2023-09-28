@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'all_routes.dart';
+part of 'routes_config.dart';
 
 // **************************************************************************
 // ShelfRouterGenerator
@@ -26,7 +26,7 @@ Router _$AllRoutesRouter(AllRoutes service) {
     service._user.call,
   );
   router.mount(
-    r'/admin',
+    r'/admin/',
     service._admin.call,
   );
   router.mount(

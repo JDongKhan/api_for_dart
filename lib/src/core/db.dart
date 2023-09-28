@@ -6,7 +6,7 @@ class Condition {
   const Condition(this.where, [this.params]);
 
   final String where;
-  final Json? params;
+  final Map<String, dynamic>? params;
 }
 
 class Limit {
@@ -54,11 +54,11 @@ abstract class DB {
 
   Future<int> count(String table, [Condition? cond]);
 
-  Future<bool> insert(String table, Json data);
+  Future<bool> insert(String table, Map<String, dynamic> data);
 
   Future<bool> update(
     String table,
-    Json data, {
+    Map<String, dynamic> data, {
     required Condition cond,
   });
 

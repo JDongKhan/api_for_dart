@@ -1,3 +1,4 @@
+import 'package:api_for_dart/src/utils/extesion.dart';
 import 'package:mysql_client/mysql_client.dart';
 
 import '../../env.dart';
@@ -28,7 +29,7 @@ class Mysql implements DB {
 
   Future<IResultSet> _execute(
     String query, [
-    Json? params,
+    Map<String, dynamic>? params,
   ]) async {
     final result = await conn.execute(query, params);
     _affectedRows = result.affectedRows.toInt();
@@ -91,7 +92,7 @@ class Mysql implements DB {
   }
 
   @override
-  Future<bool> insert(String table, Json data) async {
+  Future<bool> insert(String table, Map<String, dynamic> data) async {
     final fields = <String>[];
     final values = <String>[];
     for (String k in data.keys) {
@@ -112,7 +113,7 @@ class Mysql implements DB {
   @override
   Future<bool> update(
     String table,
-    Json data, {
+    Map<String, dynamic> data, {
     required Condition cond,
   }) async {
     final sets = <String>[];

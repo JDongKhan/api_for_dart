@@ -20,9 +20,9 @@ class AuthController extends Controller {
   FutureOr<Response> _login(Request request) {
     return response(Result(data: 'login'));
   }
-
-  @Route.all('/<ignored|.*>')
-  Response _notFound(Request request) => Response.notFound('auth action error');
+  //
+  // @Route.all('/<ignored|.*>')
+  // Response _notFound(Request request) => Response.notFound('auth action error');
 
   @override
   Router get router => _$AuthControllerRouter(this);

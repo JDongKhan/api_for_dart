@@ -1,8 +1,9 @@
 import 'dart:io';
 
+import 'package:api_for_dart/src/utils/extesion.dart';
 import 'package:ini/ini.dart';
 
-import 'globals.dart';
+import 'utils/logger_utils.dart';
 
 enum EnvSource {
   file,
@@ -48,7 +49,7 @@ class Env {
 
   Env.file(String file) : this.config(Config.fromStrings(File(file).readAsLinesSync()));
 
-  Env.json(Json env)
+  Env.json(Map<String, dynamic> env)
       : this.init(
           isDebug: parseBool(
             env['DEBUG'],
@@ -115,7 +116,7 @@ class Env {
     return defaultValue;
   }
 
-  Env copyWith(Json args) {
+  Env copyWith(Map<String, dynamic> args) {
     return _instance = Env.init(
       isDebug: args['debug'] ?? false,
       port: args['port'] ?? port,

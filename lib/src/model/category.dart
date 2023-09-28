@@ -1,5 +1,4 @@
 import '../core/model.dart';
-import '../globals.dart';
 
 class CategoryModel extends Model<int> {
   CategoryModel({
@@ -26,7 +25,7 @@ class CategoryModel extends Model<int> {
         fields = fields ?? <int>[],
         keywords = keywords ?? <String>[];
 
-  CategoryModel.fromJson(Json json)
+  CategoryModel.fromJson(Map<String, dynamic> json)
       : this(
           id: json['id'] ?? 0,
           pid: json['pid'] ?? 0,
@@ -88,7 +87,7 @@ class CategoryModel extends Model<int> {
   int get primary => id;
 
   @override
-  Json toJson([bool excludePrimary = false]) => {
+  Map<String, dynamic> toJson([bool excludePrimary = false]) => {
         if (!excludePrimary) 'id': id,
         'pid': pid,
         'title': title,

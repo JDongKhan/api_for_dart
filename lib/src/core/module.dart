@@ -1,4 +1,3 @@
-import '../globals.dart';
 import 'db.dart';
 import 'model.dart';
 
@@ -21,7 +20,7 @@ abstract class Module<M extends Model, T> {
   String get table;
   String get primary;
 
-  M parser(Json json);
+  M parser(Map<String, dynamic> json);
 
   Future<M?> find(T value) {
     return db.fetch(
@@ -88,7 +87,7 @@ abstract class Module<M extends Model, T> {
     );
   }
 
-  Future<bool> updateCond(Condition cond, Json data) {
+  Future<bool> updateCond(Condition cond, Map<String, dynamic> data) {
     return db.update(
       table,
       data,

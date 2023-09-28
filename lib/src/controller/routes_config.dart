@@ -5,14 +5,13 @@ import '../controller/post.dart';
 import '../controller/user.dart';
 import '../controller/index.dart';
 import '../controller/admin/router.dart' as admin;
-import '../core/group.dart';
-part 'all_routes.g.dart';
+part 'routes_config.g.dart';
 
-class AllRoutes extends Group {
+class AllRoutes {
   @Route.get('/echo/<message>')
   Response _echo(Request request, String message) => Response.ok(message);
 
-  @Route.mount('/auth/')
+  @Route.mount('/auth')
   Router get _auth => AuthController().router;
 
   @Route.mount('/post/')

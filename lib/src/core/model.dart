@@ -1,13 +1,15 @@
 import 'dart:convert';
 
-import '../globals.dart';
+import 'package:api_for_dart/src/utils/extesion.dart';
+
+import '../utils/logger_utils.dart';
 
 abstract class Model<T> {
   T get primary;
 
   Model copyWith();
 
-  Json toJson([bool excludePrimary = false]);
+  Map<String, dynamic> toJson([bool excludePrimary = false]);
 
   @override
   String toString() => jsonEncode(toJson());

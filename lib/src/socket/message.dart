@@ -16,7 +16,7 @@ class SocketMessage<T> {
           (parsers[json['action']] ?? (d) => d).call(json['data']) as T,
         );
 
-  static final parsers = <String, Function(Json)>{
+  static final parsers = <String, Function(Map<String, dynamic>)>{
     'login': LoginMessage.fromJson,
     'crate_room': CreateRoomMessage.fromJson,
     'join_room': JoinRoomMessage.fromJson,
@@ -30,8 +30,7 @@ class SocketMessage<T> {
     'send_message': SendMessage.fromJson,
   };
 
-  static void registerParser(String action, Function(dynamic) parser) =>
-      parsers[action] = parser;
+  static void registerParser(String action, Function(dynamic) parser) => parsers[action] = parser;
 
   final String action;
   final int timestamp;
@@ -43,7 +42,7 @@ class LoginMessage {
     required this.token,
   });
 
-  static LoginMessage fromJson(Json json) {
+  static LoginMessage fromJson(Map<String, dynamic> json) {
     return LoginMessage(
       token: json['token'],
     );
@@ -84,7 +83,7 @@ abstract class FriendMessage {
 
 class CreateRoomMessage extends RoomMessage {
   CreateRoomMessage({required super.roomId, required super.userId});
-  static CreateRoomMessage fromJson(Json json) {
+  static CreateRoomMessage fromJson(Map<String, dynamic> json) {
     return CreateRoomMessage(
       roomId: json['room_id'],
       userId: json['user_id'],
@@ -94,7 +93,7 @@ class CreateRoomMessage extends RoomMessage {
 
 class JoinRoomMessage extends RoomMessage {
   JoinRoomMessage({required super.roomId, required super.userId});
-  static JoinRoomMessage fromJson(Json json) {
+  static JoinRoomMessage fromJson(Map<String, dynamic> json) {
     return JoinRoomMessage(
       roomId: json['room_id'],
       userId: json['user_id'],
@@ -104,7 +103,7 @@ class JoinRoomMessage extends RoomMessage {
 
 class QuitRoomMessage extends RoomMessage {
   QuitRoomMessage({required super.roomId, required super.userId});
-  static QuitRoomMessage fromJson(Json json) {
+  static QuitRoomMessage fromJson(Map<String, dynamic> json) {
     return QuitRoomMessage(
       roomId: json['room_id'],
       userId: json['user_id'],
@@ -114,7 +113,7 @@ class QuitRoomMessage extends RoomMessage {
 
 class KickRoomMessage extends RoomMessage {
   KickRoomMessage({required super.roomId, required super.userId});
-  static KickRoomMessage fromJson(Json json) {
+  static KickRoomMessage fromJson(Map<String, dynamic> json) {
     return KickRoomMessage(
       roomId: json['room_id'],
       userId: json['user_id'],
@@ -124,7 +123,7 @@ class KickRoomMessage extends RoomMessage {
 
 class DissolveRoomMessage extends RoomMessage {
   DissolveRoomMessage({required super.roomId, required super.userId});
-  static DissolveRoomMessage fromJson(Json json) {
+  static DissolveRoomMessage fromJson(Map<String, dynamic> json) {
     return DissolveRoomMessage(
       roomId: json['room_id'],
       userId: json['user_id'],
@@ -134,7 +133,7 @@ class DissolveRoomMessage extends RoomMessage {
 
 class RequestFriendMessage extends FriendMessage {
   RequestFriendMessage({required super.toId, required super.userId});
-  static RequestFriendMessage fromJson(Json json) {
+  static RequestFriendMessage fromJson(Map<String, dynamic> json) {
     return RequestFriendMessage(
       toId: json['to_id'],
       userId: json['user_id'],
@@ -144,7 +143,7 @@ class RequestFriendMessage extends FriendMessage {
 
 class AgreeFriendMessage extends FriendMessage {
   AgreeFriendMessage({required super.toId, required super.userId});
-  static AgreeFriendMessage fromJson(Json json) {
+  static AgreeFriendMessage fromJson(Map<String, dynamic> json) {
     return AgreeFriendMessage(
       toId: json['to_id'],
       userId: json['user_id'],
@@ -154,7 +153,7 @@ class AgreeFriendMessage extends FriendMessage {
 
 class BlockFriendMessage extends FriendMessage {
   BlockFriendMessage({required super.toId, required super.userId});
-  static BlockFriendMessage fromJson(Json json) {
+  static BlockFriendMessage fromJson(Map<String, dynamic> json) {
     return BlockFriendMessage(
       toId: json['to_id'],
       userId: json['user_id'],
@@ -164,7 +163,7 @@ class BlockFriendMessage extends FriendMessage {
 
 class DeleteFriendMessage extends FriendMessage {
   DeleteFriendMessage({required super.toId, required super.userId});
-  static DeleteFriendMessage fromJson(Json json) {
+  static DeleteFriendMessage fromJson(Map<String, dynamic> json) {
     return DeleteFriendMessage(
       toId: json['to_id'],
       userId: json['user_id'],
@@ -174,7 +173,7 @@ class DeleteFriendMessage extends FriendMessage {
 
 class SendMessage extends ChatMessage {
   SendMessage({required super.roomId, required super.userId});
-  static SendMessage fromJson(Json json) {
+  static SendMessage fromJson(Map<String, dynamic> json) {
     return SendMessage(
       roomId: json['room_id'],
       userId: json['user_id'],

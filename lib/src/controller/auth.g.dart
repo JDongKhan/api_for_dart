@@ -18,9 +18,5 @@ Router _$AuthControllerRouter(AuthController service) {
     r'/login',
     service._login,
   );
-  router.all(
-    r'/<ignored|.*>',
-    service._notFound,
-  );
   return router;
 }

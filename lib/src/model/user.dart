@@ -1,5 +1,4 @@
 import '../core/model.dart';
-import '../globals.dart';
 
 class User extends Model<int> {
   User({
@@ -20,7 +19,7 @@ class User extends Model<int> {
     this.updateTime = 0,
   });
 
-  User.fromJson(Json? json)
+  User.fromJson(Map<String, dynamic>? json)
       : this(
           id: json?['id'] ?? 0,
           username: json?['username'] ?? '',
@@ -98,7 +97,7 @@ class User extends Model<int> {
   }
 
   @override
-  Json toJson([bool excludePrimary = false]) => {
+  Map<String, dynamic> toJson([bool excludePrimary = false]) => {
         if (!excludePrimary) 'id': id,
         'username': username,
         'password': password,

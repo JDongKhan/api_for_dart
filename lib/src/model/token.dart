@@ -1,5 +1,4 @@
 import '../core/model.dart';
-import '../globals.dart';
 
 class Token extends Model<String> {
   Token({
@@ -13,7 +12,7 @@ class Token extends Model<String> {
     this.updateTime = 0,
   });
 
-  Token.fromJson(Json? json)
+  Token.fromJson(Map<String, dynamic>? json)
       : this(
           token: json?['token'] ?? '',
           refreshToken: json?['refresh_token'] ?? '',
@@ -60,14 +59,14 @@ class Token extends Model<String> {
     );
   }
 
-  Json toToken() => {
+  Map<String, dynamic> toToken() => {
         'token': token,
         'refresh_token': refreshToken,
         'expire_in': expireIn,
       };
 
   @override
-  Json toJson([bool excludePrimary = false]) => {
+  Map<String, dynamic> toJson([bool excludePrimary = false]) => {
         'token': token,
         'refresh_token': refreshToken,
         'expire_in': expireIn,
