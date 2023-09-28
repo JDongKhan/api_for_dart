@@ -20,12 +20,12 @@ dart run
 #### 打包
 
 ```shell
-  dart compile exe bin/api_for_dart.dart -o build/app
+ ./buid_app
 ```
 
 #### 部署
 
-将app发送到服务器上，cd对应的目录下执行 
+将build下的所有资源发送到服务器上，cd对应的目录下执行 
 ```shell
 ./app
 ``` 
