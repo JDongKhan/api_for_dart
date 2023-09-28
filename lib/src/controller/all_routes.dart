@@ -6,9 +6,9 @@ import '../controller/user.dart';
 import '../controller/index.dart';
 import '../controller/admin/router.dart' as admin;
 import '../core/group.dart';
-part 'service.g.dart';
+part 'all_routes.g.dart';
 
-class Service extends Group {
+class AllRoutes extends Group {
   @Route.get('/echo/<message>')
   Response _echo(Request request, String message) => Response.ok(message);
 
@@ -21,11 +21,11 @@ class Service extends Group {
   @Route.mount('/user/')
   Router get _user => UserController().router;
 
-  @Route.mount('/admin')
+  @Route.mount('/admin/')
   Router get _admin => admin.AdminRouter().router;
 
   @Route.mount('/')
   Router get _index => IndexController().router;
 
-  Handler get handler => _$ServiceRouter(this);
+  Handler get handler => _$AllRoutesRouter(this);
 }

@@ -1,11 +1,10 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:api_for_dart/src/controller/all_routes.dart';
 import 'package:api_for_dart/src/core/auth.dart';
 import 'package:api_for_dart/src/env.dart';
 import 'package:api_for_dart/src/exception/exception.dart';
-import 'package:api_for_dart/src/router/service.dart';
 import 'package:api_for_dart/src/socket/socket.dart';
-import 'package:api_for_dart/src/utils/jwt_utils.dart';
 import 'package:args/args.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
@@ -35,7 +34,7 @@ void main(List<String> args) async {
   //默认127.0.0.1
   final ip = InternetAddress.tryParse(env.ip) ?? InternetAddress.anyIPv4;
 
-  final application = Pipeline().addMiddleware(tryCatchRequests).addMiddleware(logRequests()).addMiddleware(authRequests).addHandler(Service().handler);
+  final application = Pipeline().addMiddleware(tryCatchRequests).addMiddleware(logRequests()).addMiddleware(authRequests).addHandler(AllRoutes().handler);
 
   final staticFileHandler = createStaticHandler(
     env.documentRoot,

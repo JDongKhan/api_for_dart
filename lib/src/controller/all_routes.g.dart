@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'service.dart';
+part of 'all_routes.dart';
 
 // **************************************************************************
 // ShelfRouterGenerator
 // **************************************************************************
 
-Router _$ServiceRouter(Service service) {
+Router _$AllRoutesRouter(AllRoutes service) {
   final router = Router();
   router.add(
     'GET',
@@ -14,7 +14,7 @@ Router _$ServiceRouter(Service service) {
     service._echo,
   );
   router.mount(
-    r'/auth/',
+    r'/auth',
     service._auth.call,
   );
   router.mount(
