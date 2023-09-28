@@ -21,8 +21,8 @@ class Limit {
 abstract class DB {
   factory DB() {
     if (_instance == null) {
-      final env = Env();
-      switch (env.type) {
+      final env = Env.instance;
+      switch (env.dataBase.type) {
         default:
           _instance = Mysql(env);
       }

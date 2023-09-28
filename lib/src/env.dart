@@ -1,113 +1,105 @@
 import 'dart:io';
 
 import 'package:api_for_dart/src/utils/extesion.dart';
+import 'package:args/args.dart';
 import 'package:ini/ini.dart';
 
 import 'utils/logger_utils.dart';
 
-enum EnvSource {
-  file,
-  environment,
-}
-
 class Env {
-  Env.init({
-    this.isDebug = false,
-    this.port = '8080',
-    this.ip = '',
-    this.domain = '',
-    this.documentRoot = '',
-    this.alias = const <String>[],
-    this.isSSL = false,
-    this.type = 'mysql',
-    this.hostName = '',
-    this.dataport = 3306,
-    this.database = '',
-    this.userName = '',
-    this.password = '',
-  });
+  static Env instance = Env._();
+  Env._();
 
-  Env.config(Config? config)
-      : this.init(
-          isDebug: parseBool(
-            config?.get('default', 'DEBUG'),
-            Platform.executable.contains('dart.exe'),
-          ),
-          port: config?.get('default', 'PORT') ?? '8080',
-          ip: config?.get('default', 'IP') ?? '',
-          domain: config?.get('default', 'DOMAIN') ?? '',
-          documentRoot: config?.get('default', 'ROOT') ?? '',
-          alias: (config?.get('default', 'ALIAS') ?? '').split(' '),
-          isSSL: config?.get('default', 'IS_SSL') == '1',
+  late bool isDebug;
+  late String port;
+  late String ip;
+  //静态资源目录
+  late String root;
+  late bool isSSL;
+  //数据库配置
+  late DataBase dataBase;
+
+  Env loadFromArgument(ArgResults arguments) {
+    String? path = arguments['file'];
+    bool debug = arguments['debug'] ?? false;
+    path ??= '.env';
+    if (debug) {
+      String p = '$path-debug';
+      if (File(path).existsSync()) {
+        path = p;
+      }
+    }
+    if (File(path).existsSync()) {
+      loadFromFile(path);
+    } else {
+      loadConfig(null);
+      logger.warning('config file $path not exists.');
+    }
+    //复制其他参数
+    copyWith(<String, dynamic>{
+      for (var name in arguments.options) name: arguments[name],
+    });
+    return this;
+  }
+
+  Env init({
+    bool isDebug = false,
+    String port = '8080',
+    String ip = 'localhost',
+    String root = '',
+    bool isSSL = false,
+    DataBase? dataBase,
+  }) {
+    this.isDebug = isDebug;
+    this.port = port;
+    this.ip = ip;
+    this.root = root;
+    this.isSSL = isSSL;
+    this.dataBase = dataBase ?? DataBase();
+    return this;
+  }
+
+  Env loadConfig(Config? config) => init(
+        isDebug: parseBool(
+          config?.get('default', 'DEBUG'),
+          Platform.executable.contains('dart.exe') || Platform.executable.contains('bin/dart'),
+        ),
+        port: config?.get('default', 'PORT') ?? '8080',
+        ip: config?.get('default', 'IP') ?? 'localhost',
+        root: config?.get('default', 'ROOT') ?? '',
+        isSSL: config?.get('default', 'IS_SSL') == '1',
+        dataBase: DataBase(
           type: config?.get('DATABASE', 'TYPE') ?? 'mysql',
           hostName: config?.get('DATABASE', 'HOSTNAME') ?? '',
-          dataport: int.parse(config?.get('DATABASE', 'DATABASE_PORT') ?? '3306'),
+          port: int.parse(config?.get('DATABASE', 'DATABASE_PORT') ?? '3306'),
           database: config?.get('DATABASE', 'DATABASE') ?? '',
           userName: config?.get('DATABASE', 'USERNAME') ?? '',
           password: config?.get('DATABASE', 'PASSWORD') ?? '',
-        );
+        ),
+      );
 
-  Env.file(String file) : this.config(Config.fromStrings(File(file).readAsLinesSync()));
+  Env loadFromFile(String file) => loadConfig(Config.fromStrings(File(file).readAsLinesSync()));
 
-  Env.json(Map<String, dynamic> env)
-      : this.init(
-          isDebug: parseBool(
-            env['DEBUG'],
-            Platform.executable.contains('dart.exe'),
-          ),
-          port: env['PORT'] ?? '8080',
-          ip: env['IP'] ?? '',
-          domain: env['DOMAIN'] ?? '',
-          documentRoot: env['ROOT'] ?? '',
-          alias: env['ALIAS']?.split(' ') ?? <String>[],
-          isSSL: env['IS_SSL'] == '1',
+  Env loadFromJson(Map<String, dynamic> env) => init(
+        isDebug: parseBool(
+          env['DEBUG'],
+          Platform.executable.contains('dart.exe') || Platform.executable.contains('bin/dart'),
+        ),
+        port: env['PORT'] ?? '8080',
+        ip: env['IP'] ?? 'localhost',
+        root: env['ROOT'] ?? '',
+        isSSL: env['IS_SSL'] == '1',
+        dataBase: DataBase(
           type: env['TYPE'] ?? 'mysql',
           hostName: env['HOSTNAME'] ?? '',
-          dataport: int.parse(env['DATABASE_PORT'] ?? '3306'),
+          port: int.parse(env['DATABASE_PORT'] ?? '3306'),
           database: env['DATABASE'] ?? '',
           userName: env['USERNAME'] ?? '',
           password: env['PASSWORD'] ?? '',
-        );
+        ),
+      );
 
-  Env.environment() : this.json(Platform.environment);
-
-  factory Env([EnvSource src = EnvSource.file, String? path]) {
-    switch (src) {
-      case EnvSource.file:
-        path ??= '.env';
-        if (File(path).existsSync()) {
-          _instance = Env.file(path);
-        } else {
-          _instance = Env.config(null);
-          logger.warning('config file $path not exists.');
-        }
-        break;
-      case EnvSource.environment:
-        _instance = Env.environment();
-        break;
-    }
-
-    return _instance!;
-  }
-
-  static Env? _instance;
-
-  static Env get instance => _instance!;
-
-  final bool isDebug;
-  final String port;
-  final String ip;
-  final String domain;
-  final String documentRoot;
-  final List<String> alias;
-  final bool isSSL;
-
-  final String type;
-  final String hostName;
-  final int dataport;
-  final String database;
-  final String userName;
-  final String password;
+  Env loadFromEnvironment() => loadFromJson(Platform.environment);
 
   static bool parseBool(String? value, [bool defaultValue = false]) {
     if (value.isNotNullOrEmpty) {
@@ -117,38 +109,76 @@ class Env {
   }
 
   Env copyWith(Map<String, dynamic> args) {
-    return _instance = Env.init(
+    init(
       isDebug: args['debug'] ?? false,
       port: args['port'] ?? port,
       ip: args['ip'] ?? ip,
-      domain: args['domain'] ?? domain,
-      documentRoot: args['root'] ?? documentRoot,
-      alias: args['alias'] ?? alias,
+      root: args['root'] ?? root,
       isSSL: args['ssl'] ?? args['no-ssl'] ?? isSSL,
-      type: args['type'] ?? type,
-      hostName: args['hostname'] ?? hostName,
-      dataport: args['database-port'] ?? dataport,
-      database: args['database'] ?? database,
-      userName: args['username'] ?? userName,
-      password: args['password'] ?? password,
+      dataBase: dataBase.copyWith(
+        type: args['type'],
+        hostName: args['hostname'],
+        port: args['database-port'],
+        database: args['database'],
+        userName: args['username'],
+        password: args['password'],
+      ),
     );
+    return this;
   }
 
   Map<String, dynamic> toJson() => {
         'PORT': port,
         'IP': ip,
-        'DOMAIN': domain,
-        'ROOT': documentRoot,
-        'ALIAS': alias,
+        'ROOT': root,
         'IS_SSL': isSSL,
-        'TYPE': type,
-        'HOSTNAME': hostName,
-        'DATABASE_PORT': dataport,
-        'DATABASE': database,
-        'USERNAME': userName,
-        'PASSWORD': password,
+        'DATABASE': dataBase.toJson(),
       };
 
   @override
   String toString() => toJson().toString();
+}
+
+class DataBase {
+  final String type;
+  final String hostName;
+  final int port;
+  final String database;
+  final String userName;
+  final String password;
+  DataBase({
+    this.type = 'mysql',
+    this.hostName = '',
+    this.port = 3306,
+    this.database = '',
+    this.userName = '',
+    this.password = '',
+  });
+
+  DataBase copyWith({
+    String? type,
+    String? hostName,
+    int? port = 3306,
+    String? database,
+    String? userName,
+    String? password,
+  }) {
+    return DataBase(
+      type: type ?? this.type,
+      hostName: hostName ?? this.hostName,
+      port: port ?? this.port,
+      database: database ?? this.database,
+      userName: userName ?? this.userName,
+      password: password ?? this.password,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'PORT': port,
+        'TYPE': type,
+        'HOSTNAME': hostName,
+        'DATABASE': database,
+        'USERNAME': userName,
+        'PASSWORD': password,
+      };
 }

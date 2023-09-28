@@ -10,12 +10,12 @@ class Mysql implements DB {
 
   Mysql(Env env)
       : conn = MySQLConnectionPool(
-          host: env.hostName,
-          port: env.dataport,
-          userName: env.userName,
-          password: env.password,
+          host: env.dataBase.hostName,
+          port: env.dataBase.port,
+          userName: env.dataBase.userName,
+          password: env.dataBase.password,
           maxConnections: 10,
-          databaseName: env.database, // optional,
+          databaseName: env.dataBase.database, // optional,
         );
 
   int? _affectedRows;
