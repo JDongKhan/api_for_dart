@@ -1,0 +1,7 @@
+#!/bin/sh
+
+#打包
+dart compile exe bin/api_for_dart.dart -o build/app
+#拷贝资源
+cp -r static/ build/static/
+cp -r .env build/

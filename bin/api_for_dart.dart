@@ -36,6 +36,7 @@ void main(List<String> args) async {
   final ip = InternetAddress.tryParse(env.ip) ?? InternetAddress.anyIPv4;
   final application = Pipeline().addMiddleware(tryCatchRequests).addMiddleware(logRequests()).addMiddleware(authRequests).addHandler(AllRoutes().handler);
 
+  //静态资源
   final staticFileHandler = createStaticHandler(
     env.documentRoot,
     defaultDocument: 'index.html',
@@ -49,6 +50,5 @@ void main(List<String> args) async {
 
   server.autoCompress = true;
 
-  print('Serving at http://${server.address.host}:${server.port}');
-  print('\nwith document root ${env.documentRoot}');
+  print('Serving at http://${server.address.host}:${server.port}  with document root:${env.documentRoot}');
 }
