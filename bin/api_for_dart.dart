@@ -6,6 +6,7 @@ import 'package:api_for_dart/src/exception/exception.dart';
 import 'package:api_for_dart/src/globals.dart';
 import 'package:api_for_dart/src/socket/socket.dart';
 import 'package:api_for_dart/src/utils/jwt_utils.dart';
+import 'package:api_for_dart/src/utils/logger_utils.dart';
 import 'package:args/args.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
@@ -48,16 +49,31 @@ void main(List<String> args) async {
 ///验证token是否有效
 Handler authRequests(Handler innerHandler) {
   return (Request request) async {
-    final token = request.headers['token'] ?? '';
-    if (token.isNotEmpty) {
+    String path = request.url.path.split('?').first;
+    logger.info('开始请求$path');
+    // 过滤白名单
+    // if (!whitelist.contains(path)) {
+    if (whitelist.contains(path)) {
+      final token = request.headers['Authorization'] ?? '';
+      if (token.isEmpty) {
+        return Response.forbidden(
+          Result.error('Token is Empty', code: errorTokenInvalid).toString(),
+          headers: {
+            'content-type': 'text/plain',
+          },
+        );
+      }
       //验证toke是否有效
       final tokenModel = JwtUtils.isExpired(token);
       if (!tokenModel) {
         return Response.forbidden(
-          Result.error('Invalid token', code: errorTokenInvalid),
+          Result.error('Invalid token', code: errorTokenInvalid).toString(),
         );
       }
     }
     return innerHandler(request);
   };
 }
+
+//鉴权白名单
+final List<String> whitelist = [];

@@ -22,6 +22,10 @@ Router _$MyRoutesRouter(MyRoutes service) {
     service._post.call,
   );
   router.mount(
+    r'/file/',
+    service._file.call,
+  );
+  router.mount(
     r'/user/',
     service._user.call,
   );

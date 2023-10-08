@@ -1,3 +1,4 @@
+import 'package:api_for_dart/controller/file.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 import 'controller/auth.dart';
@@ -16,6 +17,9 @@ class MyRoutes {
 
   @Route.mount('/post/')
   Router get _post => PostController().router;
+
+  @Route.mount('/file/')
+  Router get _file => FileController().router;
 
   @Route.mount('/user/')
   Router get _user => UserController().router;

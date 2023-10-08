@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 
+/// 或者可以使用 三方库 dart_jsonwebtoken: ^2.11.0
 class JwtUtils {
   ///生成JWT token
   static String encode(Map<String, dynamic> payload, String secret) {

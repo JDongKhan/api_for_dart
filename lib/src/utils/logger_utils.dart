@@ -4,7 +4,7 @@ import 'package:api_for_dart/src/env.dart';
 import 'package:logging/logging.dart';
 
 final logger = Logger.root
-  ..level = Env.instance.isDebug ? Level.WARNING : Level.ALL
+  ..level = Env.instance.isDebug ? Level.ALL : Level.INFO
   ..onRecord.listen((record) {
     log(
       record.message,
